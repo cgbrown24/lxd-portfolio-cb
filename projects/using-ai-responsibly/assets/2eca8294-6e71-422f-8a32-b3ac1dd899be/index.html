@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Before You Trust Final Version</title>
+<style>
+:root{--navy:#002848;--blue:#074975;--bright:#007ACC;--green:#58A430;--red:#AB1F2C;--slate:#28323C;--line:#d9e3e9}
+*{box-sizing:border-box} body{margin:0;background:#fff;color:var(--slate);font-family:Outfit,"Segoe UI",Arial,sans-serif} button{font:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:10px 12px 16px}.app{border:1px solid #d7e1e7;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 9px 26px rgba(0,40,72,.10)}
+.screen{display:none}.screen.active{display:block}.content{padding:18px 22px 20px}.eyebrow{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;color:var(--bright);margin-bottom:5px}
+h1{font-size:27px;line-height:1.08;color:#074975;margin:0 0 9px}h2{font-size:22px;line-height:1.15;color:#074975;margin:0 0 9px}p{font-size:14px;line-height:1.48;margin:6px 0 10px}
+.hero{position:relative;overflow:hidden;background:#dfe7ea;color:#fff;height:230px}.hero img{width:100%;height:100%;display:block;object-fit:cover;object-position:center 40%}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,40,72,.28),rgba(0,40,72,.04) 60%,transparent)}
+.story-badge{position:absolute;left:24px;bottom:18px;z-index:2;background:rgba(0,40,72,.86);color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:8px 13px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.notes{border:1px solid var(--line);border-radius:12px;background:#fbfcfd;padding:13px 15px;margin:13px 0 10px}.notes h3{font-size:15px;color:var(--navy);margin:0 0 7px}.notes ul{margin:0 0 0 19px;padding:0}.notes li{font-size:13px;margin:5px 0;line-height:1.38}
+.actions{display:flex;justify-content:flex-end;align-items:center;gap:9px;margin-top:14px;flex-wrap:wrap}.actions.split{justify-content:space-between}.left-actions,.right-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{cursor:pointer;transition:.18s ease;border-radius:9px;padding:10px 15px;font-weight:800}.primary{border:2px solid var(--blue);background:var(--blue);color:#fff;box-shadow:0 3px 8px rgba(0,40,72,.14)}
+.primary:hover,.primary:focus-visible{background:#007ACC;border-color:#007ACC;transform:translateY(-2px)}.secondary{border:1px solid #bfd0da;background:#fff;color:var(--blue);padding:7px 11px;font-size:12px;border-radius:8px}
+.secondary:hover,.secondary:focus-visible{background:#eef7fb;border-color:var(--bright);transform:translateY(-2px)}
+.slide{border:1px solid #cfd9df;border-radius:12px;background:#fff;box-shadow:0 6px 17px rgba(0,40,72,.10);overflow:hidden;margin:13px 0 4px}
+.slide-head{padding:12px 16px 9px;border-bottom:1px solid #e3e9ed}.slide-head small{font-size:9px;font-weight:800;letter-spacing:.14em;color:var(--bright)}.slide-head h3{margin:2px 0 0;color:var(--navy);font-size:19px}.slide-body{padding:14px 16px}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}.timeline:before{content:"";position:absolute;top:18px;left:10%;right:10%;height:3px;background:#d8e2e7}
+.stage{position:relative;text-align:center;padding:0 7px}.dot{width:14px;height:14px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 0 0 2px var(--blue);margin:12px auto 10px;position:relative;z-index:1}
+.stage h4{font-size:12px;color:var(--navy);margin:0 0 3px}.stage strong{display:block;font-size:14px;color:var(--navy);line-height:1.15}.stage span{font-size:10px;color:#69757d;line-height:1.25;display:block;margin-top:3px}
+.statusline{margin-top:13px;padding-top:10px;border-top:1px solid #e1e7eb;display:flex;align-items:center;justify-content:space-between;gap:10px}.statusline b{font-size:11px;color:#66727a;letter-spacing:.06em}.ontrack{font-size:13px;font-weight:900;color:#3f7d25;border-bottom:4px solid var(--green);padding:2px 4px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.choice,.select-row{cursor:pointer;border:1px solid #cfdce3;border-radius:11px;background:#fff;color:var(--slate);font-weight:400;line-height:1.35;text-align:left;transition:.18s ease}
+.choice{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:center;padding:13px 14px}.radio,.multi-dot{width:18px;height:18px;border:2px solid #9db2bf;border-radius:50%;display:grid;place-items:center}
+.choice.selected{border:2px solid var(--blue);background:#f4f9fc}.choice.selected .radio:after{content:"";width:9px;height:9px;border-radius:50%;background:var(--blue)}
+.choice:hover,.select-row:hover{border-color:var(--bright);background:#f3f9fc}.selection-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+.select-row{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:center;padding:12px 13px}.select-row.selected{border:2px solid var(--blue);background:#f4f9fc}.select-row.selected .multi-dot:after{content:"";width:9px;height:9px;border-radius:50%;background:var(--green)}
+.select-row.correct{border-color:var(--green);background:#f4f9f0}.select-row.wrong{border-color:var(--red);background:#fcf4f3}
+.feedback{display:none;margin-top:12px;padding:11px 13px;font-size:13px;line-height:1.45;border-radius:10px}.feedback.show{display:block}.feedback.good{background:#f1f8ed;border:1px solid #cfe4c4}.feedback.try{background:#fbf2f1;border:1px solid #e9c9c5}.feedback b{color:var(--navy)}
+.modal{position:fixed;inset:0;background:rgba(0,35,57,.56);display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.modal.open{display:flex}.modalbox{width:min(520px,94vw);background:#fff;border-radius:15px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+.modalhead{display:flex;justify-content:space-between;align-items:center;gap:12px}.modalhead h3{margin:0;color:var(--navy)}.close{cursor:pointer;border:1px solid transparent;background:#eef3f6;width:34px;height:34px;border-radius:8px;font-size:19px;color:var(--navy)}
+.complete-modal .modalbox{width:min(570px,94vw);text-align:left;border-top:5px solid var(--green)}.complete-label{font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:900;color:var(--green);margin-bottom:5px}
+@media(max-width:720px){.wrap{padding:8px}.hero{height:190px}.story-badge{left:15px;bottom:13px}.content{padding:16px 15px}h1{font-size:24px}h2{font-size:20px}.timeline{grid-template-columns:repeat(2,1fr);gap:10px}.timeline:before{display:none}.stage{border:1px solid #e1e7eb;border-radius:9px;padding:9px}.dot{display:none}.choices,.selection-grid{grid-template-columns:1fr}}
+
+/* Opening story popup, matched to the Before You Prompt scenario treatment */
+.opening-screen{position:relative;min-height:520px;background:#dfe7ea;overflow:hidden}
+.opening-screen .hero{position:absolute;inset:0;height:100%;border-radius:0}
+.opening-screen .content.opening-card{
+  position:absolute;
+  z-index:5;
+  left:7%;
+  top:46%;
+  transform:translateY(-50%);
+  width:min(620px,49%);
+  height:auto;
+  min-height:0;
+  margin:0;
+  padding:20px 22px;
+  background:#fff;
+  border-radius:15px;
+  box-shadow:0 14px 34px rgba(0,40,72,.20);
+}
+.opening-screen .content.opening-card .actions{margin-top:14px}
+.opening-screen .story-badge{display:none}
+@media(max-width:850px){
+  .opening-screen{min-height:500px}
+  .opening-screen .content.opening-card{left:5%;width:72%;max-width:none}
+}
+@media(max-width:620px){
+  .opening-screen{min-height:470px}
+  .opening-screen .content.opening-card{
+    left:4%;top:45%;width:92%;max-width:none;padding:16px 17px
+  }
+}
+
+
+/* Presentation-slide treatment */
+.slide{
+  border:2px solid #d6e5ee!important;
+  border-radius:14px!important;
+  background:linear-gradient(135deg,#ffffff 0%,#f4f9fc 100%)!important;
+  box-shadow:0 10px 24px rgba(0,40,72,.13)!important;
+}
+.slide-head{
+  background:linear-gradient(90deg,#074975 0%,#007ACC 100%)!important;
+  border-bottom:0!important;
+  padding:13px 17px!important;
+}
+.slide-head small,.slide-head h3{color:#fff!important}
+.slide-body{background:linear-gradient(180deg,#fff 0%,#f7fbfd 100%)!important}
+
+
+.restart-link-wrap{text-align:center;margin-top:14px}
+.restart-link{border:0;background:transparent;color:#074975;font-size:12px;font-weight:800;cursor:pointer;padding:5px 8px}
+.restart-link span{font-size:15px;vertical-align:-1px;margin-right:4px}
+.restart-link:hover,.restart-link:focus-visible{text-decoration:underline;color:#002848}
+
+
+.btn,.choice,.select-row,.restart-link{-webkit-user-select:none;user-select:none}
+.btn::selection,.btn *::selection{background:transparent}
+
+#completeModal{z-index:9999}
+#completeModal.open{display:flex!important}
+
+
+.completion-overlay{
+  position:fixed; inset:0; z-index:2147483647;
+  display:none; align-items:center; justify-content:center;
+  padding:20px; background:rgba(0,40,72,.58);
+}
+.completion-overlay.show{display:flex!important}
+.completion-card{
+  width:min(570px,92vw); background:#fff; border-radius:16px;
+  padding:22px 24px 18px; box-shadow:0 22px 60px rgba(0,0,0,.28);
+  border-top:5px solid #58A430;
+}
+.completion-card h2{color:#074975;margin:3px 0 10px}
+
+
+/* Final completion overlay: shown by Finish Scenario before Rise is notified */
+#completeModal.completion-overlay{
+  position:fixed!important;
+  inset:0!important;
+  z-index:2147483647!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:20px!important;
+  background:rgba(0,40,72,.58)!important;
+}
+#completeModal.completion-overlay.show{
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+
+
+/* Faculty + Copilot opening scenario */
+.faculty-hero img{object-position:center 46%}
+.copilot-card{border:1px solid #d7e1e7;border-radius:13px;background:#fbfcfd;padding:14px 15px;margin:13px 0 4px;box-shadow:0 5px 14px rgba(0,40,72,.07)}
+.copilot-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}.copilot-top b{display:block;color:#074975;font-size:14px}.copilot-top small{display:block;color:#6b7780;font-size:11px;margin-top:1px}.copilot-mark{width:31px;height:31px;border-radius:9px;background:linear-gradient(135deg,#074975,#007ACC);color:#fff;display:grid;place-items:center;font-weight:900}
+.prompt-label{font-size:10px;letter-spacing:.12em;font-weight:800;color:#007ACC;margin-bottom:5px}.prompt-box,.draft-preview{background:#fff;border:1px solid #dbe5ea;border-radius:10px;padding:12px 13px;font-size:13px;line-height:1.45}.draft-preview b{color:#074975}.draft-preview p{font-size:13px;margin:5px 0 0}.faculty-choices{margin-top:12px}
+@media(max-width:720px){.faculty-hero img{object-position:60% 46%}}
+
+
+.fact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}.fact-card{border:1px solid #d8e3e9;border-radius:11px;padding:12px 13px;background:#f8fbfc}.fact-card b{display:block;color:#074975;font-size:13px;margin-bottom:4px}.fact-card span{font-size:12.5px;line-height:1.4}.story-note{border-left:4px solid #007ACC;background:#f3f9fc;padding:12px 14px;border-radius:0 10px 10px 0;margin-top:14px}.helper-text{font-size:12px;color:#66757f}.writing-task{display:flex;gap:12px;align-items:flex-start;border:1px solid #d7e1e7;background:#f8fbfc;border-radius:12px;padding:14px 15px;margin:14px 0}.writing-icon{width:36px;height:36px;border-radius:10px;background:#074975;color:#fff;display:grid;place-items:center;font-size:20px;flex:0 0 auto}.writing-task b{color:#074975}.writing-task p{font-size:13px;margin:3px 0 0}.scrub-card{border:1px solid #d7e1e7;border-radius:13px;overflow:hidden;margin:14px 0}.scrub-row{display:grid;grid-template-columns:1fr 34px 1fr;gap:8px;align-items:center;padding:12px 14px;border-bottom:1px solid #e4ebef;font-size:13px}.scrub-row:last-child{border-bottom:0}.scrub-row b{text-align:center;color:#007ACC}.scrub-row strong{color:#074975}.scrub-row .remove-text{color:#AB1F2C}.keep-row strong{color:#58A430}.copilot-shell{height:385px;border:1px solid #d8dce4;border-radius:14px;overflow:hidden;background:#fafafa;display:grid;grid-template-columns:54px 1fr;box-shadow:0 8px 20px rgba(0,0,0,.09);margin:14px 0}.cp-side{background:#f1f1f4;border-right:1px solid #dedfe5;padding:10px 7px;display:flex;flex-direction:column;align-items:center;gap:15px;color:#5f6571}.cp-logo,.cp-mini-logo{border-radius:9px;background:conic-gradient(from 210deg,#0078d4,#7f55e7,#df5aa6,#f0a73a,#37b7a5,#0078d4);padding:3px}.cp-logo{width:33px;height:33px}.cp-mini-logo{width:27px;height:27px;flex:0 0 auto}.cp-logo:after,.cp-mini-logo:after{content:"";display:block;width:100%;height:100%;background:#fff;border-radius:7px}.cp-main{display:grid;grid-template-rows:52px 1fr auto;min-width:0}.cp-head{display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#fff;border-bottom:1px solid #e1e2e6}.cp-head b{font-size:13px;color:#252934}.cp-head small{display:block;font-size:10px;color:#737985;margin-top:1px}.cp-user{width:28px;height:28px;border-radius:50%;background:#e7e8f5;color:#474b79;display:grid;place-items:center;font-size:11px;font-weight:800}.cp-body{padding:18px max(16px,7%);overflow:auto;background:linear-gradient(180deg,#fbfbfc,#f6f7f9)}.cp-user-bubble{margin-left:auto;max-width:88%;background:#e9e9f8;border-radius:14px 14px 4px 14px;padding:12px 14px;font-size:12px;line-height:1.46;color:#292d37}.cp-ai-row{display:flex;gap:9px;align-items:flex-start}.cp-ai-bubble{max-width:88%;background:#fff;border:1px solid #e0e2e7;border-radius:12px;padding:12px 14px;font-size:12px;line-height:1.48}.cp-compose{margin:0 13px 12px;border:1px solid #cfd2da;border-radius:13px;background:#fff;padding:9px 11px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#4d5260}.cp-compose.muted{color:#9296a0}.cp-send{width:28px;height:28px;border-radius:8px;background:#4b4f9e;color:#fff;display:grid;place-items:center}.faculty-complete-modal .modalbox{border-top:5px solid #58A430}.marcus-notes h3{margin-top:0}
+@media(max-width:720px){.fact-grid{grid-template-columns:1fr}.scrub-row{grid-template-columns:1fr 25px 1fr}.copilot-shell{height:430px;grid-template-columns:44px 1fr}.cp-side{padding:8px 5px}.cp-logo{width:29px;height:29px}}
+
+.story-content{padding-top:18px}
+.story-text-box{max-width:760px;margin:8px auto 18px;background:#f7fafc;border-left:4px solid var(--bright);border-radius:12px;padding:18px 20px}
+.story-text-box p{margin:0;font-size:15px;line-height:1.6}
+
+.story-content{padding-top:18px;display:flex;flex-direction:column;align-items:stretch}
+.story-content .story-text-box{
+  width:min(620px,72%);
+  max-width:620px;
+  margin:8px auto 18px 0;
+  background:#f7fafc;
+  border-left:4px solid var(--bright);
+  border-radius:0 12px 12px 0;
+  padding:18px 20px;
+  text-align:left;
+}
+.story-content .story-text-box p{margin:0;font-size:15px;line-height:1.6}
+@media(max-width:720px){.story-content .story-text-box{width:100%;max-width:none}}
+
+/* Cinematic story-scene treatment */
+.scene-stage{
+  position:relative;
+  min-height:430px;
+  overflow:hidden;
+  background:#eef3f5;
+}
+.scene-stage .hero.faculty-hero{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  min-height:430px;
+  margin:0;
+  border-radius:0;
+  overflow:hidden;
+}
+.scene-stage .hero.faculty-hero img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.scene-dim{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(0,40,72,.36) 0%,rgba(0,40,72,.13) 58%,rgba(0,40,72,.04) 100%);
+}
+.scene-overlay-card{
+  position:relative;
+  z-index:2;
+  width:min(600px,62%);
+  margin:38px 0 96px 34px;
+  padding:20px 22px;
+  background:rgba(255,255,255,.94);
+  border:1px solid rgba(255,255,255,.75);
+  border-radius:6px;
+  box-shadow:0 10px 28px rgba(0,40,72,.18);
+  color:var(--slate);
+}
+.scene-overlay-card p{margin:0 0 12px;font-size:15px;line-height:1.58}
+.scene-overlay-card p:last-child{margin-bottom:0}
+.scene-controls{
+  position:absolute;
+  z-index:3;
+  left:34px;
+  right:34px;
+  bottom:24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+.scene-controls-left{display:flex;gap:8px;flex-wrap:wrap}
+.scene-stage .scene-controls .secondary{
+  background:rgba(255,255,255,.94);
+}
+@media(max-width:720px){
+  .scene-stage{min-height:560px}
+  .scene-stage .hero.faculty-hero{min-height:560px}
+  .scene-dim{background:rgba(0,40,72,.18)}
+  .scene-overlay-card{
+    width:auto;
+    margin:22px 16px 118px;
+    padding:17px;
+  }
+  .scene-controls{
+    left:16px;right:16px;bottom:16px;
+    align-items:flex-end;
+    flex-wrap:wrap;
+  }
+}
+
+
+/* v7 narrative polish */
+.scene-overlay-card{background:rgba(255,255,255,.95);border:1px solid rgba(7,73,117,.30);border-radius:11px;box-shadow:0 12px 30px rgba(0,40,72,.22);position:relative}
+.scene-overlay-card::before{content:"";position:absolute;width:22px;height:3px;left:22px;top:14px;border-radius:3px;background:rgba(0,122,204,.55)}
+.scene-overlay-card p:first-child{padding-top:8px}
+.scene-controls{background:rgba(255,255,255,.90);border:1px solid rgba(7,73,117,.16);border-radius:9px;padding:9px 10px;box-shadow:0 5px 18px rgba(0,40,72,.14)}
+.scene-controls .btn.primary{background:#007ACC;color:#fff;border-color:#007ACC;box-shadow:0 3px 10px rgba(0,40,72,.18)}
+.scene-controls .btn.secondary{background:#fff;color:#074975}
+.marcus-decision-screen h1,.marcus-decision-screen h2,.marcus-decision-screen h3{margin-bottom:16px}
+.marcus-decision-screen h1+p,.marcus-decision-screen h2+p,.marcus-decision-screen h3+p{margin-top:0;margin-bottom:24px}
+.marcus-decision-screen .choices,.marcus-decision-screen .choice-grid,.marcus-decision-screen .options{margin-top:20px;gap:16px}
+.marcus-decision-screen .choice{margin-bottom:10px}
+.marcus-decision-screen .feedback{margin-top:22px;margin-bottom:20px}
+.marcus-decision-screen .actions{margin-top:20px}
+
+
+.step-instruction{
+  display:block;
+  font-weight:700;
+  margin-bottom:18px;
+}
+
+</style></head><body>
+<div class="wrap"><div class="app">
+<section class="screen active opening-screen marcus-decision-screen" id="f0"><div class="hero faculty-hero">
+  <img src="assets/faculty-header.png" alt="Male nursing faculty member working on a laptop in a college classroom">
+</div><div class="content opening-card"><div class="eyebrow">Step Into the Story</div><h1>Using Copilot for Workplace Writing</h1><p>Marcus, a nursing faculty member, needs to document a student concern. Follow his process as he prepares information for Copilot and decides what to do with the draft it creates.</p><div class="actions"><button class="btn primary" onclick="showScreen('f1')">Begin Scenario</button></div></div></section>
+
+<section class="screen" id="f1">
+<div class="scene-stage">
+  <div class="hero faculty-hero"><img src="assets/faculty-header.png" alt="Male nursing faculty member working on a laptop in a college classroom"></div>
+  <div class="scene-dim"></div>
+  <div class="scene-overlay-card">
+    <p>Marcus has noticed several concerns involving Alexis, one of his students. She has missed two required clinical days this term, previously reported transportation difficulties, and is requesting a make-up for the most recent missed clinical day. Her academic performance has also declined, including a 68% on her most recent exam and three missing case study assignments.</p>
+    <p>Marcus reviews the <b>Academic Risk Awareness Playbook in the Faculty Toolkit</b>. Based on the pattern he has observed, he determines that additional outreach and support are appropriate and uses the <b>Student Outreach and Support Form</b> to document his concerns and request support for Alexis.</p>
+  </div>
+  <div class="scene-controls">
+    <div class="scene-controls-left"><button class="btn secondary" onclick="showScreen('f0')">Go Back</button><button class="btn secondary" onclick="restart()">Start Over</button></div>
+    <button class="btn primary" onclick="showScreen('f1c')">Continue</button>
+  </div>
+</div>
+</section>
+
+
+
+<section class="screen" id="f1c"><div class="hero faculty-hero"><img src="assets/faculty-header.png" alt="Male nursing faculty member working on a laptop in a college classroom"></div>
+<div class="content">
+  <p><b>Review Marcus's notes carefully.</b> You will refer to this information later in the scenario.</p>
+  <div class="notes"><div class="label">Working Notes</div><ul>
+    <li><b>Student:</b> Alexis J.</li><li><b>Course:</b> NUR 214</li>
+    <li>Missed two required clinical days this term</li><li>Transportation difficulties previously discussed</li>
+    <li>Requesting a make-up for the most recent missed clinical day</li><li>68% on most recent exam</li>
+    <li>Three missing case study assignments</li><li>Academic performance has declined</li><li>Followed up with Alexis after class</li>
+  </ul></div>
+  <div class="actions split"><div class="left"><button class="btn secondary" onclick="showScreen('f1')">Go Back</button><button class="btn secondary" onclick="restart()">Start Over</button></div><div class="right"><button class="btn primary" onclick="showScreen('f2')">Continue</button></div></div>
+</div></section>
+
+<section class="screen" id="f2">
+<div class="scene-stage">
+  <div class="hero faculty-hero"><img src="assets/faculty-header.png" alt="Male nursing faculty member working on a laptop in a college classroom"></div>
+  <div class="scene-dim"></div>
+  <div class="scene-overlay-card">
+    
+    <p>Marcus wants his documentation to be clear, objective, and professional. He decides to use Copilot to help organize his notes before completing the Student Outreach and Support Form.</p>
+  
+  </div>
+  <div class="scene-controls">
+    <div class="scene-controls-left">
+      <button class="btn secondary" onclick="showScreen('f1c')">Go Back</button>
+      <button class="btn secondary" onclick="restart()">Start Over</button>
+      
+    </div>
+    <button class="btn primary" onclick="showScreen('f3')">Prepare for Copilot</button>
+  </div>
+</div>
+</section>
+
+<section class="screen" id="f3"><div class="hero faculty-hero"><img src="assets/faculty-header.png" alt="Male nursing faculty member working on a laptop in a college classroom"></div><div class="content"><p><b>Review how the information is de-identified before it is shared with Copilot.</b></p>
+<div class="scrub-card"><div class="scrub-row"><span>Alexis J.</span><b>→</b><strong>Student A</strong></div><div class="scrub-row"><span>NUR 214</span><b>→</b><strong class="remove-text">Remove</strong></div><div class="scrub-row keep-row"><span>Missed clinical days, transportation difficulties, make-up request, exam score, missing case study assignments, faculty follow-up</span><b>→</b><strong>Keep</strong></div></div>
+<div class="actions split"><div class="left-actions"><button class="btn secondary" onclick="showScreen('f2')">Go Back</button><button class="btn secondary" onclick="restart()">Start Over</button></div><div class="right-actions"><button class="btn primary" onclick="showScreen('f4')">View the Prompt</button></div></div></div></section>
+
+<section class="screen" id="f4"><div class="hero faculty-hero"><img src="assets/faculty-header.png" alt="Male nursing faculty member working on a laptop in a college classroom"></div><div class="content"><p><strong class="step-instruction">Review the prompt Marcus prepared for Copilot.</strong></p>
+<div class="copilot-shell"><div class="cp-side"><div class="cp-logo"></div><span>⌂</span><span>＋</span><span>☰</span></div><div class="cp-main"><div class="cp-head"><div><b>Microsoft 365 Copilot</b><small>Workplace writing</small></div><span class="cp-user">M</span></div><div class="cp-body"><div class="cp-user-bubble"><b>Prompt</b><br><br>Help me organize the following notes into clear, objective, professional documentation for a Student Outreach and Support Form requesting support for a student. Do not add information or make assumptions.<br><br>Student A has missed two required clinical days this term and previously reported transportation difficulties. Student A is requesting a make-up for the most recent missed clinical day. Academic performance has also declined, including a score of 68% on the most recent exam and three missing case study assignments. Followed up with Student A after class.</div></div><div class="cp-compose"><span>Prompt ready</span><span class="cp-send">➤</span></div></div></div>
+<div class="actions split"><div class="left-actions"><button class="btn secondary" onclick="showScreen('f3')">Go Back</button><button class="btn secondary" onclick="restart()">Start Over</button></div><div class="right-actions"><button class="btn primary" onclick="showScreen('f5')">Send to Copilot</button></div></div></div></section>
+
+<section class="screen" id="f5"><div class="hero faculty-hero"><img src="assets/faculty-header.png" alt="Male nursing faculty member working on a laptop in a college classroom"></div><div class="content"><p><b>Read the draft Copilot created.</b> When you are ready, continue to decide what Marcus should do before using it in the Student Outreach and Support Form.</p>
+<div class="copilot-shell"><div class="cp-side"><div class="cp-logo"></div><span>⌂</span><span>＋</span><span>☰</span></div><div class="cp-main"><div class="cp-head"><div><b>Microsoft 365 Copilot</b><small>Generated draft</small></div><span class="cp-user">M</span></div><div class="cp-body"><div class="cp-ai-row"><div class="cp-mini-logo"></div><div class="cp-ai-bubble"><b>Draft documentation</b><br><br>Student A has missed two required clinical days this term and previously reported transportation difficulties. Student A is requesting a make-up for the most recent missed clinical day. Academic performance has declined, including a score of 68% on the most recent exam and three missing case study assignments. Faculty followed up with the student after class regarding these concerns.</div></div></div><div class="cp-compose muted"><span>Ask anything</span><span class="cp-send">➤</span></div></div></div>
+<div class="actions split"><div class="left-actions"><button class="btn secondary" onclick="showScreen('f4')">Go Back</button><button class="btn secondary" onclick="restart()">Start Over</button></div><div class="right-actions"><button class="btn primary" onclick="showScreen('f6');resetFaculty()">Continue</button></div></div></div></section>
+
+<section class="screen" id="f6"><div class="hero faculty-hero"><img src="assets/faculty-header.png" alt="Male nursing faculty member working on a laptop in a college classroom"></div><div class="content"><h2>What Should Marcus Do Next?</h2><p>Copilot produced a polished draft. What should Marcus do before communicating this information through the Student Outreach and Support Form?</p>
+<div class="choices faculty-choices"><button class="choice" onclick="facultyDecision('use',this)"><span class="radio"></span><span>Use the draft as written because Copilot followed his instructions.</span></button><button class="choice" onclick="facultyDecision('review',this)"><span class="radio"></span><span>Review the draft for accuracy before using it.</span></button></div><div class="feedback" id="facultyFeedback"></div>
+<div class="actions split"><div class="left-actions"><button class="btn secondary" onclick="showScreen('f5')">Go Back</button><button class="btn secondary" onclick="restart()">Start Over</button></div><div class="right-actions"><button class="btn primary" id="continueScenario2" style="display:none" onclick="openFacultyComplete()">Complete Scenario</button></div></div></div></section>
+<section class="screen opening-screen" id="s0"><div class="hero">
+  <img src="assets/scenario-header.jpg" alt="Professional reviewing work on a laptop in an office">
+  
+</div><div class="content opening-card"><div class="eyebrow">Step Into the Story</div><h1>Preparing for the Progress Meeting</h1><p>You asked AI to help organize your project updates into a polished presentation slide. Before you decide whether to use what AI created, you will compare it with the information you originally provided.</p><div class="actions"><button class="btn primary" onclick="go(1)">Begin Scenario</button></div></div></section>
+<section class="screen" id="s1"><div class="hero">
+  <img src="assets/scenario-header.jpg" alt="Professional reviewing work on a laptop in an office">
+  
+</div><div class="content"><h2>Review Your Project Update Notes</h2><p>These are the details you provided to AI. Review them before seeing what AI created.</p><div class="notes">
+  <h3>Project Update Notes</h3>
+  <ul>
+    <li>Phase 1 is complete.</li>
+    <li>Phase 2 is underway and expected to wrap up in November.</li>
+    <li>The team is reviewing feedback from the initial rollout.</li>
+    <li>Final implementation is planned for January.</li>
+  </ul>
+</div><div class="actions split"><div class="left-actions"><button class="btn secondary" onclick="go(0)">Go Back</button><button class="btn secondary" onclick="restart()">Start Over</button></div><div class="right-actions"><button class="btn primary" onclick="go(2)">See What AI Created</button></div></div></div></section>
+<section class="screen" id="s2"><div class="hero">
+  <img src="assets/scenario-header.jpg" alt="Professional reviewing work on a laptop in an office">
+  
+</div><div class="content"><h2>Compare the Slide With Your Notes</h2><p>Review the AI-generated presentation slide. Use <b>View My Notes</b> if you need to compare it with your original information.</p><div class="slide" aria-label="AI-generated project update presentation slide">
+          <div class="slide-head">
+            <small>PROJECT UPDATE</small>
+            <h3>Progress Meeting | Project Status</h3>
+          </div>
+          <div class="slide-body">
+            <div class="timeline">
+              <div class="stage"><div class="dot"></div><h4>PHASE 1</h4><strong>Complete</strong><span>Milestone achieved</span></div>
+              <div class="stage"><div class="dot"></div><h4>PHASE 2</h4><strong>November 15</strong><span>On track for completion</span></div>
+              <div class="stage"><div class="dot"></div><h4>INITIAL ROLLOUT</h4><strong>Overwhelmingly Positive</strong><span>Employee feedback</span></div>
+              <div class="stage"><div class="dot"></div><h4>FINAL IMPLEMENTATION</h4><strong>January 5</strong><span>Planned launch</span></div>
+            </div>
+            <div class="statusline"><b>OVERALL PROJECT STATUS</b><span class="ontrack">ON TRACK</span></div>
+          </div>
+        </div><div class="actions split"><div class="left-actions"><button class="btn secondary" onclick="go(1)">Go Back</button><button class="btn secondary" onclick="restart()">Start Over</button><button class="btn secondary" onclick="openNotes()">View My Notes</button></div><div class="right-actions"><button class="btn primary" onclick="go(3)">Make Your Decision</button></div></div></div></section>
+<section class="screen" id="s3"><div class="hero">
+  <img src="assets/scenario-header.jpg" alt="Professional reviewing work on a laptop in an office">
+  
+</div><div class="content"><h2>Would you use this slide as-is for your progress meeting?</h2><p>Based on your review, choose the response that best reflects what you would do next.</p><div class="choices"><button class="choice" onclick="decision('yes',this)"><span class="radio"></span><span>Yes. After review, it is ready to present.</span></button><button class="choice" onclick="decision('no',this)"><span class="radio"></span><span>No. After review, it needs some corrections.</span></button></div><div class="feedback" id="decisionFeedback"></div><div class="actions split"><div class="left-actions"><button class="btn secondary" onclick="go(2)">Go Back</button><button class="btn secondary" onclick="restart()">Start Over</button><button class="btn secondary" onclick="openNotes()">View My Notes</button><button class="btn secondary" onclick="openSlide()">View the Slide</button></div><div class="right-actions"><button class="btn primary" id="continueReview" style="display:none" onclick="go(4)">Continue Review</button></div></div></div></section>
+<section class="screen" id="s4"><div class="hero">
+  <img src="assets/scenario-header.jpg" alt="Professional reviewing work on a laptop in an office">
+  
+</div><div class="content"><h2>What did AI change or make an assumption about?</h2><p>Select all of the details AI changed, added, or assumed based on your original notes.</p><div class="selection-grid" id="selectionGrid"><button class="select-row" data-key="phase1" onclick="toggleSelect(this)"><span class="multi-dot"></span><span>Phase 1 Complete</span></button><button class="select-row" data-key="nov15" onclick="toggleSelect(this)"><span class="multi-dot"></span><span>November 15</span></button><button class="select-row" data-key="positive" onclick="toggleSelect(this)"><span class="multi-dot"></span><span>Overwhelmingly Positive</span></button><button class="select-row" data-key="jan5" onclick="toggleSelect(this)"><span class="multi-dot"></span><span>January 5</span></button><button class="select-row" data-key="ontrack" onclick="toggleSelect(this)"><span class="multi-dot"></span><span>Overall Project Status: ON TRACK</span></button></div><div class="feedback" id="reviewFeedback"></div><div class="actions split"><div class="left-actions"><button class="btn secondary" onclick="go(3)">Go Back</button><button class="btn secondary" onclick="restart()">Start Over</button><button class="btn secondary" onclick="openNotes()">View My Notes</button><button class="btn secondary" onclick="openSlide()">View the Slide</button></div><div class="right-actions"><button class="btn primary" id="checkSelections" onclick="checkReview()">Check My Selections</button><button class="btn primary" id="finishBtn" style="display:none" onclick="finishScenario()">Finish Scenario</button></div></div></div></section>
+</div></div>
+<div class="modal faculty-complete-modal" id="facultyCompleteModal" onclick="if(event.target===this)closeFacultyComplete()"><div class="modalbox"><div class="complete-label">✓ Scenario Complete</div><h2>Review before you communicate.</h2><p>Marcus prepared his information responsibly and used Copilot to help with workplace writing. Even with a clear prompt, the AI-generated draft still needs human review for accuracy before it is communicated or used.</p><p><b>Next, you will practice reviewing AI-generated content for changes and assumptions.</b></p><div class="actions split"><div class="left-actions"><button class="btn secondary" onclick="closeFacultyComplete();showScreen('f6')">Go Back</button><button class="btn secondary" onclick="closeFacultyComplete();restart()">Start Over</button></div><div class="right-actions"><button class="btn primary" onclick="continueToScenario2()">Continue to Next Scenario</button></div></div></div></div>
+<div class="modal" id="notesModal" onclick="if(event.target===this)closeNotes()"><div class="modalbox"><div class="modalhead"><h3>Project Update Notes</h3><button class="close" onclick="closeNotes()">×</button></div><p>These are the details you originally provided to AI.</p><div class="notes">
+  <h3>Project Update Notes</h3>
+  <ul>
+    <li>Phase 1 is complete.</li>
+    <li>Phase 2 is underway and expected to wrap up in November.</li>
+    <li>The team is reviewing feedback from the initial rollout.</li>
+    <li>Final implementation is planned for January.</li>
+  </ul>
+</div><div class="actions"><button class="btn primary" onclick="closeNotes()">Back to Scenario</button></div></div></div>
+
+<div class="modal" id="slideModal" onclick="if(event.target===this)closeSlide()">
+ <div class="modalbox" style="width:min(760px,95vw)">
+  <div class="modalhead"><h3 style="color:#074975">AI-Generated Project Slide</h3><button class="close" onclick="closeSlide()">×</button></div>
+  <div class="slide" aria-label="AI-generated project update presentation slide">
+          <div class="slide-head">
+            <small>PROJECT UPDATE</small>
+            <h3>Progress Meeting | Project Status</h3>
+          </div>
+          <div class="slide-body">
+            <div class="timeline">
+              <div class="stage"><div class="dot"></div><h4>PHASE 1</h4><strong>Complete</strong><span>Milestone achieved</span></div>
+              <div class="stage"><div class="dot"></div><h4>PHASE 2</h4><strong>November 15</strong><span>On track for completion</span></div>
+              <div class="stage"><div class="dot"></div><h4>INITIAL ROLLOUT</h4><strong>Overwhelmingly Positive</strong><span>Employee feedback</span></div>
+              <div class="stage"><div class="dot"></div><h4>FINAL IMPLEMENTATION</h4><strong>January 5</strong><span>Planned launch</span></div>
+            </div>
+  <div class="actions"><button class="btn primary" onclick="closeSlide()">Back to Decision</button></div>
+ </div>
+</div>
+ </div>
+</div>
+
+<div id="completeModal" class="completion-overlay" aria-hidden="true">
+      <div class="completion-card" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+        <div class="complete-label">✓ Scenario Complete</div>
+        <h2 id="completeTitle">You reviewed before you trusted.</h2>
+        <p>You compared AI-generated content with your original information, identified details AI changed or assumed, and determined that corrections were needed before using the slide.</p>
+        <p><b>Select Continue below to move forward in the course.</b></p>
+        <div class="restart-link-wrap">
+         <button type="button" class="restart-link" onclick="restart()"><span aria-hidden="true">↻</span> Start Over</button>
+       </div>
+      </div>
+    </div>
+<script>
+let current='f0',completionSent=false;const correctKeys=new Set(['nov15','positive','jan5','ontrack']);
+function showScreen(id){closeNotes();closeSlide();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');current=id;}
+function go(n){showScreen('s'+n);if(n===3)resetDecision();if(n===4)resetReview()}
+function restart(){
+  completionSent=false;
+  closeFacultyComplete();
+  var cm=document.getElementById('completeModal');
+  if(cm){cm.classList.remove('show');cm.style.display='none';cm.setAttribute('aria-hidden','true');}
+  resetFaculty();
+  resetDecision();
+  resetReview();
+  showScreen('f0');
+}
+
+function resetFaculty(){document.querySelectorAll('#f6 .choice').forEach(b=>b.classList.remove('selected'));let f=document.getElementById('facultyFeedback');if(f){f.className='feedback';f.innerHTML='';}let c=document.getElementById('continueScenario2');if(c)c.style.display='none'}
+function facultyDecision(k,el){document.querySelectorAll('#f6 .choice').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');let f=document.getElementById('facultyFeedback'),c=document.getElementById('continueScenario2');if(k==='review'){f.className='feedback show good';f.innerHTML='<b>That\'s right.</b> Marcus should review the draft for accuracy before using it. AI-generated writing can sound polished even when details are incorrect or unsupported.';c.style.display='inline-block'}else{f.className='feedback show try';f.innerHTML='<b>Not quite.</b> A polished response is not necessarily an accurate one. Marcus should review the draft for accuracy before communicating it through the Student Outreach and Support Form.';c.style.display='none'}}
+function openFacultyComplete(){document.getElementById('facultyCompleteModal').classList.add('open')}
+function closeFacultyComplete(){document.getElementById('facultyCompleteModal').classList.remove('open')}
+function continueToScenario2(){closeFacultyComplete();go(0)}
+
+function resetDecision(){document.querySelectorAll('#s3 .choice').forEach(b=>b.classList.remove('selected'));let f=document.getElementById('decisionFeedback');f.className='feedback';f.innerHTML='';document.getElementById('continueReview').style.display='none'}
+function decision(k,el){document.querySelectorAll('#s3 .choice').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');let f=document.getElementById('decisionFeedback');if(k==='no'){f.className='feedback show good';f.innerHTML='<b>That is the right call.</b> Some information in the AI-generated slide was changed or assumed. Take a closer look to identify what AI introduced.';document.getElementById('continueReview').style.display='inline-block'}else{f.className='feedback show try';f.innerHTML='<b>Take another look.</b> Some details in the AI-generated slide do not match the information in your original notes. Compare the slide with your notes again before deciding.';document.getElementById('continueReview').style.display='none'}}
+function toggleSelect(el){el.classList.toggle('selected');el.classList.remove('correct','wrong');let f=document.getElementById('reviewFeedback');if(f.classList.contains('show')){f.className='feedback';f.innerHTML=''}document.getElementById('finishBtn').style.display='none';document.getElementById('checkSelections').style.display='inline-block'}
+function resetReview(){document.querySelectorAll('#selectionGrid .select-row').forEach(b=>b.classList.remove('selected','correct','wrong'));let f=document.getElementById('reviewFeedback');f.className='feedback';f.innerHTML='';document.getElementById('finishBtn').style.display='none';document.getElementById('checkSelections').style.display='inline-block'}
+function checkReview(){let rows=[...document.querySelectorAll('#selectionGrid .select-row')],selected=new Set(rows.filter(r=>r.classList.contains('selected')).map(r=>r.dataset.key)),ok=selected.size===correctKeys.size&&[...correctKeys].every(k=>selected.has(k)),f=document.getElementById('reviewFeedback');if(ok){rows.forEach(r=>{if(correctKeys.has(r.dataset.key))r.classList.add('correct')});f.className='feedback show good';f.innerHTML='<b>That is the right review.</b> AI added specific dates, characterized the feedback as overwhelmingly positive, and assigned an overall project status that was not provided in your original notes. Phase 1 being complete was supported by the source information.';document.getElementById('checkSelections').style.display='none';document.getElementById('finishBtn').style.display='inline-block'}else{rows.forEach(r=>{if(r.classList.contains('selected')&&!correctKeys.has(r.dataset.key))r.classList.add('wrong')});f.className='feedback show try';f.innerHTML='<b>Take another look.</b> Compare each detail with your original notes. Select the information AI changed, added, or assumed.'}}
+function finishScenario(){
+  var modal=document.getElementById('completeModal');
+  if(!modal){return;}
+
+  // Show the learner-facing completion card first.
+  modal.classList.add('show');
+  modal.style.setProperty('display','flex','important');
+  modal.style.visibility='visible';
+  modal.style.opacity='1';
+  modal.setAttribute('aria-hidden','false');
+
+  // Let the overlay paint before notifying Rise that the interaction is complete.
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      if(!completionSent){
+        completionSent=true;
+        try{
+          window.parent.postMessage({ type: 'complete' }, '*');
+        }catch(e){}
+      }
+    });
+  });
+}
+function openNotes(){document.getElementById('notesModal').classList.add('open')}function openSlide(){document.getElementById('slideModal').classList.add('open')}function closeSlide(){document.getElementById('slideModal').classList.remove('open')}function closeNotes(){document.getElementById('notesModal').classList.remove('open')}document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeNotes();closeSlide();closeFacultyComplete()}});
+</script></body></html>

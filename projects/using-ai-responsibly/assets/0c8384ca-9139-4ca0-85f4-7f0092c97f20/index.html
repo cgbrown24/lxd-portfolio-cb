@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Before You Share or Connect</title>
+<style>
+:root{
+  --navy:#002848;--deep:#074975;--blue:#007ACC;--cyan:#14D0FA;
+  --green:#58A430;--red:#AB1F2C;--ink:#28323C;--muted:#5E6B75;
+  --border:#D8E1E6;--panel:#F5F8FA;--white:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#fff;color:var(--ink);font-family:"Outfit",Arial,sans-serif}
+button{font:inherit}
+.app{max-width:980px;margin:0 auto;background:#fff;overflow:hidden}
+.app.working{
+  border:1px solid #D8E1E6;border-radius:16px;
+  box-shadow:0 8px 24px rgba(0,40,72,.08)
+}
+.hero{
+  position:relative;height:390px;background-image:
+  linear-gradient(90deg,rgba(0,40,72,.30),rgba(0,40,72,.04)),
+  url("assets/access-connections.png");
+  background-size:cover;background-position:center;
+}
+.hero.compact{
+  height:235px;background-position:center 47%;
+  border-bottom:0
+}
+.hero-card{
+  position:absolute;left:42px;top:50%;transform:translateY(-50%);
+  width:min(430px,calc(100% - 84px));background:rgba(255,255,255,.97);
+  border-radius:18px;padding:26px 28px;box-shadow:0 16px 38px rgba(0,40,72,.22)
+}
+.hero-card h1{margin:0 0 8px;color:var(--deep);font-size:31px;line-height:1.12;font-weight:600}
+.hero-card p{margin:0 0 18px;font-size:16px;line-height:1.52}
+.stage{padding:18px 30px 16px;background:#fff;border-top:0;overflow:visible;display:flex;flex-direction:column;box-sizing:border-box}
+.stage[hidden],.hero[hidden]{display:none!important}
+.app.working .hero.compact{border-bottom:1px solid #E3E9ED}
+
+h2{margin:0 0 8px;color:var(--deep);font-size:28px;line-height:1.2;font-weight:600}
+.instructions{margin:0 0 12px;font-size:15px;line-height:1.45}
+.primary{
+  min-height:44px;padding:10px 19px;border:1px solid var(--deep);border-radius:8px;
+  background:var(--deep);color:#fff;font-weight:600;cursor:pointer;
+  transition:.18s ease
+}
+.primary:hover{background:var(--blue);border-color:var(--blue);transform:translateY(-1px)}
+.secondary{
+  min-height:36px;padding:7px 12px;border:1px solid #9CB0BC;border-radius:7px;
+  background:#fff;color:var(--deep);font-size:14px;font-weight:600;cursor:pointer
+}
+.secondary:hover{background:#F4F8FA;border-color:var(--deep)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.explore-card{
+  min-height:155px;padding:18px;text-align:left;background:#fff;border:1px solid var(--border);
+  border-radius:12px;cursor:pointer;box-shadow:0 4px 12px rgba(0,40,72,.05);
+  display:flex;flex-direction:column;transition:.18s ease
+}
+.explore-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 7px 16px rgba(0,40,72,.09)}
+.explore-card.visited{border-color:#A9C8D8;background:#F8FCFE}
+.card-title{color:var(--deep);font-size:14px;font-weight:600;letter-spacing:.035em}
+.accent{width:34px;height:3px;background:var(--cyan);margin:10px 0}
+.card-cue{font-size:13.5px;line-height:1.3;flex:1;color:#3F4D57}
+.card-action{margin-top:5px;color:var(--blue);font-size:12.5px;font-weight:600}
+.detail{
+  margin-top:7px;padding:8px 12px;background:#F5F9FB;border:1px solid #D8E6ED;border-radius:10px
+}
+.detail[hidden],.apply-wrap[hidden]{display:none}
+.detail h3{margin:0 0 2px;color:var(--deep);font-size:16px}
+.detail p{margin:0;font-size:13px;line-height:1.32}
+.detail .example{margin-top:3px;color:var(--deep)}
+.apply-wrap{margin-top:17px}
+.apply-instruction{margin:0 0 9px;font-size:15px}
+
+.permission-shell{
+  margin:16px 0 18px;padding:16px;background:#F1F4F6;border:1px solid #D7E0E5;border-radius:13px
+}
+.permission-dialog{
+  max-width:620px;margin:0 auto;background:#fff;border:1px solid #D7DFE4;border-radius:11px;
+  overflow:hidden;box-shadow:0 8px 24px rgba(0,40,72,.11)
+}
+.permission-top{padding:13px 17px 10px;text-align:center;border-bottom:1px solid #E7ECEF}
+.ai-badge{width:36px;height:36px;margin:0 auto 6px;border-radius:11px;background:#EAF5FB;color:var(--blue);display:grid;place-items:center;font-weight:600}
+.permission-top h3{margin:0;color:var(--navy);font-size:19px;font-weight:600}
+.permission-list{padding:3px 16px}
+.permission-row{display:flex;align-items:center;gap:11px;padding:7px 1px}
+.permission-row+.permission-row{border-top:1px solid #EDF1F3}
+.service-icon{flex:0 0 30px;width:30px;height:30px;display:grid;place-items:center}
+.service-icon svg{width:29px;height:29px}
+.permission-copy strong{display:block;font-size:15px;font-weight:600}
+.permission-copy span{display:block;margin-top:2px;color:var(--muted);font-size:13.5px}
+.permission-foot{padding:8px 16px;background:#F8FAFB;border-top:1px solid #E7ECEF;color:#52616B;font-size:13px}
+.transition-box{
+  margin-top:15px;padding:16px 18px;background:#F7FAFC;border:1px solid #D8E5EB;border-radius:10px
+}
+.transition-box p{margin:0 0 10px;font-size:15px;line-height:1.48}
+.decision-bridge{margin-top:14px;margin-bottom:16px}
+.decision-bridge p{margin-bottom:0}
+.story-box{
+  padding:18px 20px;background:#F7FAFC;border:1px solid #D8E5EB;border-radius:11px
+}
+.story-box h3{margin:0 0 7px;color:var(--deep);font-size:21px;font-weight:600}
+.story-box p{margin:0;font-size:15px;line-height:1.5}
+.question-block{margin-top:17px}
+.question{margin:0 0 4px;color:var(--navy);font-size:20px;font-weight:600}
+.question-instruction{margin:0;color:var(--muted);font-size:14px}
+.choices{display:grid;gap:10px;margin-top:11px}
+.decision-btn{
+  width:100%;padding:13px 15px;text-align:left;border:1px solid var(--border);border-radius:9px;
+  background:#fff;color:var(--ink);cursor:pointer;display:flex;align-items:flex-start;gap:11px;transition:.18s ease
+}
+.decision-btn:hover{border-color:var(--blue);background:#F8FCFE}
+.radio-mark{flex:0 0 20px;width:20px;height:20px;margin-top:1px;border:2px solid #9AAAB5;border-radius:50%;position:relative}
+.decision-btn.selected{border-color:var(--blue);background:#F1F8FC}
+.decision-btn.selected .radio-mark{border-color:var(--blue)}
+.decision-btn.selected .radio-mark:after{content:"";position:absolute;width:10px;height:10px;border-radius:50%;background:var(--blue);left:3px;top:3px}
+.feedback{margin-top:13px;padding:14px 16px;border:1px solid #DDE5E9;border-radius:10px;background:#F4F7F8;font-size:15px;line-height:1.48}
+.feedback[hidden],.finish-row[hidden]{display:none}
+.feedback.correct{background:#F3F8F0;border-color:#CFE1C6}
+.feedback.incorrect{background:#FCF5F6;border-color:#E8C9CE}
+.feedback strong{display:block;margin-bottom:3px;color:var(--navy)}
+.nav-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px}
+.nav-left{display:flex;gap:8px}.nav-right{margin-left:auto}
+.finish-row{display:flex;justify-content:flex-end;margin-top:13px}
+
+.complete-card{text-align:center;left:50%;transform:translate(-50%,-50%);max-width:560px}
+.complete-check{
+  width:50px;height:50px;margin:0 auto 11px;border-radius:50%;background:#EDF6E8;color:var(--green);
+  display:grid;place-items:center;font-size:26px;font-weight:600
+}
+.complete-card h1{font-size:30px}
+.complete-card p{max-width:465px;margin:0 auto 12px}
+.restart-link{
+  border:0;background:transparent;color:var(--deep);font-weight:600;font-size:14px;cursor:pointer;padding:7px 10px
+}
+.restart-link:hover{text-decoration:underline}
+
+@media(max-width:760px){
+  .hero{height:360px}.hero.compact{height:185px}.hero-card{left:18px;width:calc(100% - 36px);padding:22px}
+  .stage{padding:16px;height:auto;min-height:0}.cards{grid-template-columns:1fr}.explore-card{min-height:0}
+  .permission-shell{padding:9px}.permission-list{padding:4px 13px}.permission-top{padding:16px 13px 12px}
+  .permission-foot{padding:10px 13px}.nav-row{align-items:flex-end}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.stage-content{flex:0 0 auto;min-height:0;overflow:visible}
+.stage .nav-row{margin-top:12px;padding-top:0;flex:0 0 auto}
+.stage .nav-left,.stage .nav-right{display:flex;align-items:center;gap:8px}
+.stage .secondary{font-size:12px;padding:7px 10px}
+.stage .primary{min-height:38px}
+.primary[disabled]{opacity:.45;cursor:not-allowed;pointer-events:none}
+.transition-copy{max-width:720px}
+.transition-copy h3{margin:0 0 9px;color:#074975;font-size:20px}
+.transition-copy p{margin:0 0 12px;line-height:1.55}
+
+
+#accessTransitionScreen,#decisionSetupScreen{padding-bottom:14px}
+#accessTransitionScreen .nav-row,#decisionSetupScreen .nav-row{margin-top:18px}
+#requestScreen .permission-shell{padding:10px 12px}
+#requestScreen .permission-dialog{max-width:650px}
+#requestScreen .permission-top{padding:9px 13px 6px}
+#requestScreen .permission-list{display:grid;grid-template-columns:1fr 1fr;gap:0 14px;padding:3px 13px 4px}
+#requestScreen .permission-row{padding:6px 2px;gap:8px;min-width:0}
+#requestScreen .permission-copy strong{font-size:14px}
+#requestScreen .permission-copy span{font-size:12px;line-height:1.2}
+#requestScreen .permission-foot{padding:6px 13px 8px;font-size:11.5px;line-height:1.25}
+@media(max-width:700px){#requestScreen .permission-list{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="app">
+  <!-- Full-image opening -->
+  <section id="openingHero" class="hero">
+    <div class="hero-card">
+      <h1>Consider the Access</h1>
+      <p>AI can access more than the words entered in a prompt. Select <strong>Explore</strong> to consider what to know before sharing, uploading, or connecting information to AI.</p>
+      <button id="exploreBtn" class="primary" type="button">Explore</button>
+    </div>
+  </section>
+
+  <!-- Persistent shallow header for working screens -->
+  <div id="compactHero" class="hero compact" hidden aria-hidden="true"></div>
+
+  <!-- Screen 1 -->
+  <section id="exploreScreen" class="stage" hidden>
+    <div class="stage-content">
+      <h2>Consider the Access</h2>
+      <p class="instructions">Select each item to consider what to know before sharing, uploading, or connecting information to AI.</p>
+      <div class="cards">
+      <button class="explore-card" type="button" data-key="know">
+        <span class="card-title">KNOW THE ACCESS</span><span class="accent"></span>
+        <span class="card-cue">What can the AI see or use?</span>
+        <span class="card-action">Explore →</span>
+      </button>
+      <button class="explore-card" type="button" data-key="limit">
+        <span class="card-title">LIMIT THE ACCESS</span><span class="accent"></span>
+        <span class="card-cue">How much access does the AI actually need?</span>
+        <span class="card-action">Explore →</span>
+      </button>
+      <button class="explore-card" type="button" data-key="confirm">
+        <span class="card-title">CONFIRM THE CONNECTION</span><span class="accent"></span>
+        <span class="card-cue">Is this connection approved?</span>
+        <span class="card-action">Explore →</span>
+      </button>
+    </div>
+
+    <div id="detail" class="detail" hidden>
+      <h3 id="detailTitle"></h3><p id="detailText"></p><p id="detailExample" class="example"></p>
+    </div>
+    
+      <span id="exploreReady" hidden></span>
+    </div>
+    <div class="nav-row">
+      <div class="nav-left"><button id="restartExplore" class="secondary" type="button">Start Over</button></div>
+      <div class="nav-right"><button id="continueExplore" class="primary" type="button" disabled>Continue</button></div>
+    </div>
+  </section>
+
+  <!-- Screen 2 -->
+  <section id="accessTransitionScreen" class="stage" hidden>
+    <div class="stage-content">
+      <h2>You Have Considered the Access</h2>
+      <div class="transition-copy">
+        <p>Before connecting AI to another resource, there is one more thing to consider: <strong>what access is actually being requested.</strong></p>
+      </div>
+    </div>
+    <div class="nav-row">
+      <div class="nav-left"><button id="backExploreTransition" class="secondary" type="button">Go Back</button><button id="restartAccessTransition" class="secondary" type="button">Start Over</button></div>
+      <div class="nav-right"><button id="continueToRequest" class="primary" type="button">Continue to the Access Request</button></div>
+    </div>
+  </section>
+
+  <section id="requestScreen" class="stage" hidden>
+    <div class="stage-content">
+    <h2>Before You Connect</h2>
+    <p class="instructions">Take a closer look at the access being requested.</p>
+
+    <div class="permission-shell">
+      <div class="permission-dialog" aria-label="Simulated AI permission request">
+        <div class="permission-top">
+          <div class="ai-badge">AI</div>
+          <h3>AI Assistant would like access to:</h3>
+        </div>
+        <div class="permission-list">
+          <div class="permission-row">
+            <span class="service-icon"><svg viewBox="0 0 40 40"><path d="M12 28h20a6 6 0 0 0 1-11.9A10 10 0 0 0 14.7 13 7.5 7.5 0 0 0 12 28z" fill="#0078D4"/><path d="M8 29h17a5 5 0 0 0 .8-9.9A8 8 0 0 0 11 16.6 6.5 6.5 0 0 0 8 29z" fill="#28A8EA"/></svg></span>
+            <span class="permission-copy"><strong>OneDrive</strong><span>Search and read files you can access</span></span>
+          </div>
+          <div class="permission-row">
+            <span class="service-icon"><svg viewBox="0 0 40 40"><circle cx="21" cy="20" r="14" fill="#038387"/><circle cx="11" cy="20" r="7" fill="#36B7A7"/><rect x="18" y="10" width="16" height="20" rx="3" fill="#0B6A6D"/><path d="M23 16h7M23 20h7M23 24h5" stroke="#fff" stroke-width="2"/></svg></span>
+            <span class="permission-copy"><strong>SharePoint</strong><span>Access files and connected sites</span></span>
+          </div>
+          <div class="permission-row">
+            <span class="service-icon"><svg viewBox="0 0 40 40"><rect x="6" y="9" width="28" height="23" rx="3" fill="#1473E6"/><path d="M7 12l13 10 13-10" fill="none" stroke="#fff" stroke-width="2.5"/><rect x="3" y="13" width="16" height="16" rx="2" fill="#0A5BC4"/><circle cx="11" cy="21" r="4" fill="none" stroke="#fff" stroke-width="2"/></svg></span>
+            <span class="permission-copy"><strong>Outlook</strong><span>Access information from your work account</span></span>
+          </div>
+          <div class="permission-row">
+            <span class="service-icon"><svg viewBox="0 0 40 40"><rect x="10" y="10" width="24" height="23" rx="4" fill="#6264A7"/><circle cx="29" cy="9" r="5" fill="#7B83EB"/><rect x="3" y="17" width="18" height="16" rx="3" fill="#5059C9"/><path d="M8 21h9M12.5 21v8" stroke="#fff" stroke-width="2.3"/></svg></span>
+            <span class="permission-copy"><strong>Teams</strong><span>Access connected collaboration content</span></span>
+          </div>
+        </div>
+        <div class="permission-foot">This connection would allow AI Assistant to use information from these resources.</div>
+      </div>
+    </div>
+
+    
+    </div>
+    <div class="nav-row">
+      <div class="nav-left"><button id="backExplore" class="secondary" type="button">Go Back</button><button id="restartRequest" class="secondary" type="button">Start Over</button></div>
+      <div class="nav-right"><button id="continueRequest" class="primary" type="button">Continue</button></div>
+    </div>
+  </section>
+
+  <!-- Screen 3: transition -->
+  <section id="decisionSetupScreen" class="stage" hidden>
+    <div class="stage-content">
+      <h2>The AI Assistant Is Approved for Broham Use</h2>
+      <div class="transition-copy">
+        <p>You are using it to help locate information for a project. As you begin, the AI Assistant asks for access to several company resources.</p>
+        <p>You have reviewed the access request. Now decide what should happen before moving forward.</p>
+      </div>
+    </div>
+    <div class="nav-row">
+      <div class="nav-left"><button id="backRequestFromSetup" class="secondary" type="button">Go Back</button><button id="restartSetup" class="secondary" type="button">Start Over</button></div>
+      <div class="nav-right"><button id="decisionBtn" class="primary" type="button">Make the Decision</button></div>
+    </div>
+  </section>
+
+  <!-- Screen 4 -->
+  <section id="decisionScreen" class="stage" hidden>
+    <div class="stage-content">
+    <h2>What should you do next?</h2>
+    <div class="question-block">
+      
+      <p class="question-instruction">Select one option below.</p>
+    </div>
+    <div class="choices">
+      <button class="decision-btn" type="button" data-correct="false"><span class="radio-mark"></span><span>Connect now. The AI tool is already approved.</span></button>
+      <button class="decision-btn" type="button" data-correct="true"><span class="radio-mark"></span><span>Confirm that the connection and intended use are approved before granting access.</span></button>
+    </div>
+    <div id="feedback" class="feedback" hidden aria-live="polite"></div>
+    <div id="finishRow" class="finish-row" hidden><button id="finishBtn" class="primary" type="button">Finish Scenario</button></div>
+    
+    </div>
+    <div class="nav-row">
+      <div class="nav-left"><button id="backSetup" class="secondary" type="button">Go Back</button><button id="restartDecision" class="secondary" type="button">Start Over</button></div>
+    </div>
+  </section>
+
+  <!-- Full-image closing -->
+  <section id="completeHero" class="hero" hidden>
+    <div class="hero-card complete-card">
+      <div class="complete-check">✓</div>
+      <h1>Scenario Complete</h1>
+      <p>You reviewed the access being requested and confirmed what needed to happen before making the connection.</p>
+      <p><strong>Select Continue below to move forward in the course.</strong></p>
+      <button id="restartBtn" class="restart-link" type="button">↻ Start Over</button>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  const openingHero=document.getElementById("openingHero");
+  const compactHero=document.getElementById("compactHero");
+  const exploreScreen=document.getElementById("exploreScreen");
+  const requestScreen=document.getElementById("requestScreen");
+  const accessTransitionScreen=document.getElementById("accessTransitionScreen");
+  const decisionSetupScreen=document.getElementById("decisionSetupScreen");
+  const decisionScreen=document.getElementById("decisionScreen");
+  const completeHero=document.getElementById("completeHero");
+  const cards=[...document.querySelectorAll(".explore-card")];
+  const detail=document.getElementById("detail"), detailTitle=document.getElementById("detailTitle"), detailText=document.getElementById("detailText"), detailExample=document.getElementById("detailExample");
+  const continueExplore=document.getElementById("continueExplore"), exploreReady=document.getElementById("exploreReady"), feedback=document.getElementById("feedback"), finishRow=document.getElementById("finishRow");
+  const decisionChoices=[...document.querySelectorAll(".decision-btn")];
+  const visited=new Set();
+  let completionSent=false;
+
+  const details={
+    know:{title:"Know the Access",text:"Understand what the AI feature will be able to see or use.",example:"For example: Is it accessing one file, an entire folder, your calendar, or another system?"},
+    limit:{title:"Limit the Access",text:"Provide only the information and access necessary and authorized for the task.",example:"Give the AI only the access it needs for the specific work you are doing."},
+    confirm:{title:"Confirm the Connection",text:"Confirm that the connection and intended use are approved before granting access.",example:"Approval of an AI tool does not automatically cover every connector, feature, or integration."}
+  };
+
+  function showWork(screen){
+    document.querySelector(".app").classList.add("working");
+    openingHero.hidden=true;
+    completeHero.hidden=true;
+    compactHero.hidden=false;
+    [exploreScreen,accessTransitionScreen,requestScreen,decisionSetupScreen,decisionScreen].forEach(s=>s.hidden=s!==screen);
+    /* Only the lower content state changes. The header and outer container remain mounted. */
+    if(document.activeElement && document.activeElement.blur){
+      document.activeElement.blur();
+    }
+  }
+  function resetDecisionState(){
+    feedback.hidden=true;
+    finishRow.hidden=true;
+    feedback.className="feedback";
+    decisionChoices.forEach(b=>{b.disabled=false;b.classList.remove("selected");});
+  }
+  function signalRiseCompletion(){
+    if(completionSent)return;
+    completionSent=true;
+    window.parent.postMessage({type:"complete"},"*");
+  }
+  function resetAll(){
+    document.querySelector(".app").classList.remove("working");
+    visited.clear();
+    continueExplore.disabled=true;
+    exploreReady.hidden=true;
+    cards.forEach(c=>{c.classList.remove("visited");c.querySelector(".card-action").textContent="Explore →";});
+    detail.hidden=true; continueExplore.disabled=true; exploreReady.hidden=true; feedback.hidden=true; finishRow.hidden=true;
+    feedback.className="feedback";
+    decisionChoices.forEach(b=>{b.disabled=false;b.classList.remove("selected");});
+    compactHero.hidden=true; exploreScreen.hidden=true; accessTransitionScreen.hidden=true; requestScreen.hidden=true; decisionSetupScreen.hidden=true; decisionScreen.hidden=true; completeHero.hidden=true;
+    openingHero.hidden=false;
+  }
+
+  document.getElementById("exploreBtn").addEventListener("click",()=>showWork(exploreScreen));
+
+  cards.forEach(card=>card.addEventListener("click",()=>{
+    const d=details[card.dataset.key];
+    visited.add(card.dataset.key); card.classList.add("visited");
+    card.querySelector(".card-action").textContent="Completed";
+    detailTitle.textContent=d.title;detailText.textContent=d.text;detailExample.textContent=d.example;detail.hidden=false;
+    if(visited.size===3){
+      continueExplore.disabled=false;
+      exploreReady.hidden=true;
+    }
+  }));
+
+  continueExplore.addEventListener("click",()=>showWork(accessTransitionScreen));
+  document.getElementById("backExploreTransition").addEventListener("click",()=>showWork(exploreScreen));
+  document.getElementById("continueToRequest").addEventListener("click",()=>showWork(requestScreen));
+  document.getElementById("backExplore").addEventListener("click",()=>showWork(accessTransitionScreen));
+  document.getElementById("continueRequest").addEventListener("click",()=>showWork(decisionSetupScreen));
+  document.getElementById("backRequestFromSetup").addEventListener("click",()=>showWork(requestScreen));
+  document.getElementById("decisionBtn").addEventListener("click",()=>{
+    resetDecisionState();
+    showWork(decisionScreen);
+  });
+  document.getElementById("backSetup").addEventListener("click",()=>{
+    resetDecisionState();
+    showWork(decisionSetupScreen);
+  });
+
+  decisionChoices.forEach(btn=>btn.addEventListener("click",()=>{
+    decisionChoices.forEach(b=>b.classList.remove("selected"));btn.classList.add("selected");
+    feedback.hidden=false;feedback.className="feedback";
+    if(btn.dataset.correct==="true"){
+      feedback.classList.add("correct");
+      feedback.innerHTML="<strong>That is the approach.</strong>Approval of an AI tool does not automatically cover every feature or connection. Confirm that the connection and intended use are approved, and limit access to what is necessary and authorized.";
+      finishRow.hidden=false;
+      decisionChoices.forEach(b=>b.disabled=true);
+    }else{
+      feedback.classList.add("incorrect");
+      feedback.innerHTML="<strong>Take another look.</strong>An approved AI tool does not automatically mean every feature or connection is approved. Confirm the connection and intended use before granting access.";
+      finishRow.hidden=true;
+    }
+  }));
+
+  document.getElementById("finishBtn").addEventListener("click",()=>{
+    document.querySelector(".app").classList.remove("working");
+    compactHero.hidden=true;exploreScreen.hidden=true;accessTransitionScreen.hidden=true;requestScreen.hidden=true;decisionSetupScreen.hidden=true;decisionScreen.hidden=true;
+    completeHero.hidden=false;
+    setTimeout(signalRiseCompletion,300);
+  });
+
+  document.getElementById("restartBtn").addEventListener("click",resetAll);
+  document.getElementById("restartExplore").addEventListener("click",resetAll);
+  document.getElementById("restartAccessTransition").addEventListener("click",resetAll);
+  document.getElementById("restartRequest").addEventListener("click",resetAll);
+  document.getElementById("restartSetup").addEventListener("click",resetAll);
+  document.getElementById("restartDecision").addEventListener("click",resetAll);
+})();
+</script>
+</body>
+</html>

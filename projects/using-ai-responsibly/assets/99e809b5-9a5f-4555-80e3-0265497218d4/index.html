@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Before You Trust - Review Flow</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap');
+:root{
+  --navy:#074975;
+  --blue:#007ACC;
+  --bright:#14D0FA;
+  --green:#58A430;
+  --red:#AB1F2C;
+  --ink:#28323C;
+  --muted:#59636d;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#fff;color:var(--ink);font-family:Outfit,Arial,sans-serif}
+body{padding:22px 18px 18px}
+.flow{
+  width:min(1100px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr);
+  align-items:start;
+}
+.step{text-align:center;min-width:0}
+.icon-ring{
+  width:clamp(132px,15vw,190px);
+  aspect-ratio:1;
+  margin:0 auto 12px;
+  border:5px solid #3488c5;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#fff;
+}
+.icon-ring svg{width:68%;height:68%;overflow:visible}
+.copy{font-size:clamp(18px,2vw,25px);line-height:1.08}
+.copy strong{display:block;color:var(--ink);font-weight:600}
+.copy span{display:block;font-weight:400;margin-top:4px}
+.arrow{
+  align-self:center;
+  height:44px;
+  margin-top:calc(clamp(132px,15vw,190px)/2 - 22px);
+  display:grid;
+  place-items:center;
+}
+.arrow svg{width:28px;height:44px}
+@media(max-width:760px){
+  body{padding:18px 14px}
+  .flow{
+    width:min(430px,100%);
+    grid-template-columns:1fr;
+    gap:0;
+  }
+  .icon-ring{width:150px;margin-bottom:10px;border-width:4px}
+  .copy{font-size:21px}
+  .arrow{
+    height:42px;
+    margin:7px 0 9px;
+    transform:rotate(90deg);
+  }
+  .arrow svg{width:22px;height:36px}
+}
+@media(max-width:380px){
+  .icon-ring{width:132px}
+  .copy{font-size:19px}
+}
+</style>
+</head>
+<body>
+<main class="flow" aria-label="Review AI-generated content before deciding whether to use it">
+
+  <section class="step">
+    <div class="icon-ring" aria-hidden="true">
+      <svg viewBox="0 0 120 120">
+        <rect x="23" y="23" width="70" height="78" rx="5" fill="none" stroke="#315A86" stroke-width="5"/>
+        <path d="M33 47h38M33 61h47M33 75h40M33 88h27" fill="none" stroke="#60717e" stroke-width="5" stroke-linecap="round"/>
+        <path d="M34 34c5-10 18-11 24-2 8-6 19 0 18 9-1 8-10 11-17 7-7 8-20 4-20-6-5 0-8-4-5-8z" fill="none" stroke="#315A86" stroke-width="4"/>
+        <path d="M87 16l4 9 9 4-9 4-4 9-4-9-9-4 9-4z" fill="#14D0FA"/>
+        <path d="M103 34l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#315A86"/>
+      </svg>
+    </div>
+    <div class="copy"><strong>AI provides</strong><span>a response.</span></div>
+  </section>
+
+  <div class="arrow" aria-hidden="true">
+    <svg viewBox="0 0 28 44"><path d="M4 3l19 19L4 41" fill="none" stroke="#6B747A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+
+  <section class="step">
+    <div class="icon-ring" aria-hidden="true">
+      <svg viewBox="0 0 120 120">
+        <path d="M28 18h48l18 18v58H28z" fill="none" stroke="#315A86" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M76 18v19h18M40 43h27M40 56h25M40 69h18" fill="none" stroke="#60717e" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="75" cy="72" r="20" fill="#fff" stroke="#315A86" stroke-width="5"/>
+        <path d="M89 87l14 14" stroke="#14D0FA" stroke-width="8" stroke-linecap="round"/>
+        <path d="M65 68h20M65 76h15" stroke="#60717e" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="copy"><strong>You review</strong><span>it.</span></div>
+  </section>
+
+  <div class="arrow" aria-hidden="true">
+    <svg viewBox="0 0 28 44"><path d="M4 3l19 19L4 41" fill="none" stroke="#6B747A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+
+  <section class="step">
+    <div class="icon-ring" aria-hidden="true">
+      <svg viewBox="0 0 120 120">
+        <path d="M60 16c14 13 28 16 39 18v25c0 25-14 39-39 49-25-10-39-24-39-49V34c11-2 25-5 39-18z" fill="none" stroke="#315A86" stroke-width="5"/>
+        <path d="M40 61l13 13 28-31" fill="none" stroke="#58A430" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M89 24l6-12M99 33l12-6M96 44l12 2" stroke="#58A430" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="copy"><strong>You verify</strong><span>it.</span></div>
+  </section>
+
+  <div class="arrow" aria-hidden="true">
+    <svg viewBox="0 0 28 44"><path d="M4 3l19 19L4 41" fill="none" stroke="#6B747A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+
+  <section class="step">
+    <div class="icon-ring" aria-hidden="true">
+      <svg viewBox="0 0 120 120">
+        <circle cx="60" cy="36" r="16" fill="#315A86"/>
+        <path d="M35 74c2-17 12-27 25-27s23 10 25 27" fill="#315A86"/>
+        <circle cx="39" cy="83" r="20" fill="#14D0FA"/>
+        <path d="M29 83l7 7 14-16" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="84" cy="83" r="20" fill="#AB1F2C"/>
+        <path d="M76 75l16 16M92 75L76 91" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+        <path d="M91 39l8-7M99 49l11-2" stroke="#315A86" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="copy"><strong>You decide</strong><span>whether to use it.</span></div>
+  </section>
+
+</main>
+</body>
+</html>

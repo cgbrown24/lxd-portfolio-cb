@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>De-Identification Exercise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--deep:#002848;--navy:#074975;--blue:#007ACC;--green:#58A430;--red:#AB1F2C;--ink:#28323C;--muted:#66727D;--line:#DDE5EA;--soft:#F6F8FA;--greensoft:#F2F8EE}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font-family:"Outfit",Arial,sans-serif}.wrap{max-width:940px;margin:auto;padding:12px 18px 18px}
+.card{border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 8px 24px rgba(0,40,72,.08);overflow:hidden}
+.head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:15px 18px;border-bottom:1px solid var(--line);background:#FBFCFD}
+.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);font-weight:600}h2{font-size:21px;line-height:1.2;color:var(--deep);margin:2px 0 0;font-weight:600}
+.state{font-size:13px;font-weight:600;color:#596873;background:#EEF3F6;border-radius:7px;padding:6px 10px;white-space:nowrap}.state.after{color:#3E7B20;background:var(--greensoft)}
+.screen{padding:18px;animation:fade .2s ease}@keyframes fade{from{opacity:0}to{opacity:1}}
+.label{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:7px}.prompt{border:1px solid var(--line);background:var(--soft);border-radius:10px;padding:16px 17px;font-size:17px;line-height:1.58;min-height:92px}
+.instruction{margin:14px 0 9px;font-size:15px;font-weight:400;color:var(--ink)}
+.markup{border:1px solid #E6D0D1;background:#FFF9F9;border-radius:10px;padding:16px 17px;font-size:17px;line-height:1.65;min-height:92px}
+.scrub{background:#FFE3E4;color:#841D24;border-radius:4px;padding:0 3px;text-decoration:line-through;text-decoration-thickness:2px}.replace{background:#EAF5E4;color:#3F7C20;border-radius:4px;padding:0 3px;font-weight:600}.removed{color:#8B3A3F;font-size:13px;font-weight:600;margin-left:3px}
+.note{font-size:14px;line-height:1.48;color:#5D6B75;margin:10px 0 0}.actions{display:flex;justify-content:flex-start;align-items:center;gap:10px;margin-top:13px;flex-wrap:wrap}.nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:15px;padding-top:14px;border-top:1px solid var(--line)}
+.primary,.secondary{font-family:"Outfit";font-weight:600;border-radius:8px;cursor:pointer;transition:.18s}.primary{background:var(--navy);border:1px solid var(--navy);color:#fff;padding:10px 16px;font-size:15px}.primary:hover{background:var(--blue);border-color:var(--blue)}.secondary{background:#fff;border:1px solid #AEBCC6;color:var(--navy);padding:8px 12px;font-size:14px}.secondary:hover{border-color:var(--blue);background:#F4FAFF}
+.overlay{position:fixed;inset:0;background:rgba(0,40,72,.52);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.overlay.show{display:flex;animation:fade .2s ease}.modal{width:min(540px,100%);background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.22);padding:26px;position:relative}.check{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--greensoft);color:var(--green);font-size:24px;font-weight:600;margin-bottom:12px}.modal h3{font-size:24px;color:var(--deep);margin:0 0 8px}.modal p{font-size:16px;line-height:1.5;margin:0}.modal .nextmsg{margin-top:10px;font-weight:600;color:var(--navy)}.close{position:absolute;right:14px;top:12px;border:0;background:transparent;color:#66727D;font-size:25px;cursor:pointer}.close:hover{color:var(--blue)}
+@media(max-width:650px){.wrap{padding:8px 12px 14px}.head{align-items:flex-start}.screen{padding:15px}h2{font-size:19px}.prompt,.markup{font-size:16px}.nav{align-items:flex-end}}
+</style></head>
+<body>
+<div class="wrap"><section class="card">
+<div class="head"><div><div class="kicker" id="kicker"></div><h2 id="title"></h2></div><div class="state" id="state"></div></div>
+<div class="screen" id="screen"></div>
+</section></div>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true">
+ <div class="modal"><button class="close" id="closeModal" aria-label="Close">×</button><div class="check">✓</div>
+ <h3>Exercise Complete</h3>
+ <p>You have seen how identifying details can be removed or generalized while keeping the information needed for the task.</p>
+ <p class="nextmsg">Select Continue below to apply the Three Checks to a workplace scenario.</p>
+ <div class="actions"><button class="secondary" id="restartExercise">Start Over</button></div>
+ </div>
+</div>
+
+<script>
+const examples=[
+{title:"Student Information",
+ original:"Help me draft a supportive message about Jordan Lee, Student ID 458721, who is enrolled in NUR 214 and received a 68% on the last exam.",
+ marked:'Help me draft a supportive message about <span class="scrub">Jordan Lee</span> <span class="replace">a student</span>, <span class="scrub">Student ID 458721</span> <span class="removed">[remove]</span>, who is enrolled in <span class="scrub">NUR 214</span> <span class="replace">a nursing course</span> and received a <span class="scrub">68%</span> <span class="replace">below-passing score</span> on the last exam.',
+ after:"Help me draft a supportive message about a student in a nursing course who received a below-passing score on a recent exam.",
+ changeNote:"The name and student ID are removed. The course and exact score are generalized so the prompt keeps only what is needed for the task.",
+ afterNote:"The task can still be completed without identifying the student."},
+{title:"Employee Information",
+ original:"Summarize the staffing impact of Maria Lopez, Regional Director of Operations in Phoenix, taking medical leave beginning October 12.",
+ marked:'Summarize the staffing impact of <span class="scrub">Maria Lopez</span> <span class="replace">an employee</span>, <span class="scrub">Regional Director of Operations</span> <span class="removed">[remove]</span> in <span class="scrub">Phoenix</span> <span class="removed">[remove]</span>, taking <span class="scrub">medical leave beginning October 12</span> <span class="replace">an approved leave of absence</span>.',
+ after:"Summarize the potential staffing impact of an employee taking an approved leave of absence.",
+ changeNote:"The name, specific role, location, medical detail, and exact date are removed or generalized while preserving the business need.",
+ afterNote:"The prompt keeps the staffing question without identifying the employee or sharing unnecessary personal details."}
+];
+let current=0,stage=0,riseSent=false;
+const $=id=>document.getElementById(id);
+
+function render(){
+ const e=examples[current];
+ $("kicker").textContent=`Example ${current+1} of 2`;
+ $("title").textContent=e.title;
+ $("state").classList.remove("after");
+ if(stage===0){
+  $("state").textContent="Before";
+  $("screen").innerHTML=`
+   <div class="label">Prompt Before De-Identification</div>
+   <div class="prompt">${e.original}</div>
+   <p class="instruction">Select De-Identify This Prompt to see what should be removed or generalized.</p>
+   <div class="actions"><button class="primary" onclick="goStage(1)">De-Identify This Prompt</button></div>`;
+ }else if(stage===1){
+  $("state").textContent="De-Identifying";
+  $("screen").innerHTML=`
+   <div class="label">What Changes</div>
+   <div class="markup">${e.marked}</div>
+   <p class="note">${e.changeNote}</p>
+   <div class="nav"><button class="secondary" onclick="restartCurrent()">Start Over</button><button class="primary" onclick="goStage(2)">View the New Prompt</button></div>`;
+ }else{
+  $("state").textContent="After"; $("state").classList.add("after");
+  const next=current===0
+   ? `<button class="primary" onclick="nextExample()">Next: Employee Information →</button>`
+   : `<button class="primary" onclick="showComplete()">Complete Exercise</button>`;
+  $("screen").innerHTML=`
+   <div class="label">Prompt After De-Identification</div>
+   <div class="prompt">${e.after}</div>
+   <p class="note">${e.afterNote}</p>
+   <div class="nav"><button class="secondary" onclick="restartCurrent()">Start Over</button>${next}</div>`;
+ }
+}
+function goStage(n){stage=n;render()}
+function restartCurrent(){stage=0;render()}
+function nextExample(){current=1;stage=0;render()}
+function showComplete(){
+ $("overlay").classList.add("show");
+ if(!riseSent){riseSent=true;setTimeout(()=>window.parent.postMessage({type:"complete"},"*"),400)}
+}
+$("closeModal").onclick=()=>$("overlay").classList.remove("show");
+$("restartExercise").onclick=()=>{$("overlay").classList.remove("show");current=0;stage=0;render()};
+render();
+</script></body></html>
